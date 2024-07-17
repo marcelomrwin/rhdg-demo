@@ -1,0 +1,25 @@
+demo-data-grid:
+  distributedCache:
+    l1Lifespan: "60000"
+    l1CleanupInterval: "180000"
+    mode: "SYNC"
+    remoteTimeout: "17500"
+    statistics: "true"
+    encoding:
+      key:
+        mediaType: "application/x-java-serialized-object"
+      value:
+        mediaType: "application/x-java-serialized-object"
+    locking:
+      concurrencyLevel: "1000"
+      acquireTimeout: "15000"
+      striping: "false"
+    expiration:
+      lifespan: "300000"
+      maxIdle: "120000"
+    memory:
+      storage: "OFF_HEAP"
+      maxSize: "256MB"
+      whenFull: "REMOVE"
+    stateTransfer:
+      timeout: "60000"

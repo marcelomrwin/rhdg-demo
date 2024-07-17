@@ -1,0 +1,14 @@
+quarkus:
+  log:
+    level: INFO
+  http:
+    port: 8081
+  infinispan-client:
+    hosts: localhost:11222
+    username: admin
+    password: admin
+    client-intelligence: BASIC
+"%prod":
+  quarkus:
+    http:
+      port: 8080

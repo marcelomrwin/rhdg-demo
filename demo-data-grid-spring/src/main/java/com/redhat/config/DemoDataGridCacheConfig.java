@@ -1,12 +1,17 @@
-package com.redhat;
+package com.redhat.config;
 
+import com.redhat.model.BusRoute;
+import com.redhat.service.DemoDataGridCacheListener;
 import org.infinispan.client.hotrod.RemoteCache;
 import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.commons.dataconversion.MediaType;
+import org.infinispan.commons.marshall.Marshaller;
+import org.infinispan.commons.marshall.ProtoStreamMarshaller;
 import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
 import org.infinispan.configuration.cache.StorageType;
 import org.infinispan.eviction.EvictionStrategy;
+import org.infinispan.protostream.SerializationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,23 +20,27 @@ import org.springframework.context.annotation.Configuration;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-public class DemoDataGridSpringCacheConfig {
+public class DemoDataGridCacheConfig {
 
     static final String CACHE_NAME = "demo-data-grid";
     private final RemoteCacheManager cacheManager;
+
     @Value("${app.cache.delete}")
     private Boolean cacheDelete;
 
     @Autowired
-    public DemoDataGridSpringCacheConfig(RemoteCacheManager cacheManager) {
+    public DemoDataGridCacheConfig(RemoteCacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
 
     @Bean
-    RemoteCache<Object, Object> remoteCache() {
-        RemoteCache<Object, Object> remoteCache = null;
+    RemoteCache<String, BusRoute> remoteCache() {
+        RemoteCache<String, BusRoute> remoteCache = null;
         if (cacheDelete) {
             ConfigurationBuilder builder = new ConfigurationBuilder();
+
+            cacheManager.getMarshallerRegistry().registerMarshaller(new ProtoStreamMarshaller());
+
             builder.clustering()
                     .cacheMode(CacheMode.DIST_SYNC)
                     .l1()
@@ -39,9 +48,11 @@ public class DemoDataGridSpringCacheConfig {
                     .cleanupTaskFrequency(3, TimeUnit.MINUTES)
                     .encoding()
                     .key()
+//                    .mediaType(MediaType.APPLICATION_SERIALIZED_OBJECT)
                     .mediaType(MediaType.APPLICATION_PROTOSTREAM)
                     .encoding()
                     .value()
+//                    .mediaType(MediaType.APPLICATION_SERIALIZED_OBJECT)
                     .mediaType(MediaType.APPLICATION_PROTOSTREAM)
             ;
 
@@ -54,7 +65,8 @@ public class DemoDataGridSpringCacheConfig {
             remoteCache = cacheManager.getCache(CACHE_NAME);
         }
 
-        remoteCache.addClientListener(new DemoDataGridSpringCacheListener());
+        remoteCache.addClientListener(new DemoDataGridCacheListener());
         return remoteCache;
     }
+
 }

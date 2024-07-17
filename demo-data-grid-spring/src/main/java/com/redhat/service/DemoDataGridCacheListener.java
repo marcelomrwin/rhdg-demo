@@ -1,4 +1,4 @@
-package com.redhat;
+package com.redhat.service;
 
 import org.infinispan.client.hotrod.annotation.ClientListener;
 import org.infinispan.client.hotrod.event.ClientCacheEntryCreatedEvent;
@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @ClientListener
-public class DemoDataGridSpringCacheListener {
+public class DemoDataGridCacheListener {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
