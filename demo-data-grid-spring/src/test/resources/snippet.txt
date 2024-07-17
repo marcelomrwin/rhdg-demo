@@ -1,0 +1,27 @@
+RemoteCache<String, BusRoute> remoteCache = null;
+        if (cacheDelete) {
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+
+            cacheManager.getMarshallerRegistry().registerMarshaller(new ProtoStreamMarshaller());
+
+            builder.clustering()
+                    .cacheMode(CacheMode.DIST_SYNC)
+                    .l1()
+                    .lifespan(1, TimeUnit.MINUTES)
+                    .cleanupTaskFrequency(3, TimeUnit.MINUTES)
+                    .encoding()
+                    .key()
+                    .mediaType(MediaType.APPLICATION_PROTOSTREAM)
+                    .encoding()
+                    .value()
+                    .mediaType(MediaType.APPLICATION_PROTOSTREAM)
+            ;
+
+            builder.expiration().lifespan(5, TimeUnit.MINUTES).maxIdle(2, TimeUnit.MINUTES);
+            builder.memory().storage(StorageType.OFF_HEAP).maxSize("256MB").whenFull(EvictionStrategy.REMOVE);
+            cacheManager.administration().removeCache(CACHE_NAME);
+            remoteCache = cacheManager.administration().createCache(CACHE_NAME, builder.build());
+
+        } else {
+            remoteCache = cacheManager.getCache(CACHE_NAME);
+        }

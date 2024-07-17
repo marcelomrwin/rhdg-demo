@@ -8,7 +8,15 @@ quarkus:
     username: admin
     password: admin
     client-intelligence: BASIC
+    cache:
+      demo-data-grid:
+        configuration-resource: demoDataGridCache.xml
 "%prod":
   quarkus:
     http:
       port: 8080
+    infinispan-client:
+      client-intelligence: HASH_DISTRIBUTION_AWARE
+      hosts: ${INFINISPAN_HOSTS}
+      username: ${INFINISPAN_USER}
+      password: ${INFINISPAN_PASSWD}

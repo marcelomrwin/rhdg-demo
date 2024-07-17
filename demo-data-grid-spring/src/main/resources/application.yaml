@@ -10,3 +10,9 @@ server:
 app:
   cache:
     delete: true
+infinispan:
+  remote:
+    server-list: 127.0.0.1:11222
+    client-intelligence: BASIC
+    auth-username: admin
+    auth-password: admin
