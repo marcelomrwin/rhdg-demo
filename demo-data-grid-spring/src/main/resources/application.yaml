@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: demo-data-grid-spring
+  profiles:
+    active: @spring.profiles.active@
+server:
+  http2:
+    enabled: true
+  port: 8082
+infinispan:
+  remote:
+    enabled: true
+    client-intelligence: BASIC
+    auth-username: admin
+    auth-password: admin
+    server-list: 127.0.0.1:11222
+    marshaller: org.infinispan.commons.marshall.ProtoStreamMarshaller
+    java-serial-allowlist: com.redhat.*
+app:
+  cache:
+    delete: false

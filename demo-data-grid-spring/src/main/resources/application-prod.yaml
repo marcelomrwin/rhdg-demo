@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: demo-data-grid-spring-prod
+server:
+  port: 8084
